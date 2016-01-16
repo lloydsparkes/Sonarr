@@ -223,6 +223,14 @@
       <Project>{74420a79-cc16-442c-8b1e-7c1b913844f0}</Project>
       <Name>CurlSharp</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ExternalModules\SocksWebProxy\Org.Mentalis\Org.Mentalis.csproj">
+      <Project>{4c3f4f57-a121-44ba-97ce-b5f30ed6a735}</Project>
+      <Name>Org.Mentalis</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExternalModules\SocksWebProxy\SocksWebProxy\SocksWebProxy.csproj">
+      <Project>{ef64b71a-6512-460e-8f0a-bcd456ff9461}</Project>
+      <Name>SocksWebProxy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LogentriesNLog\LogentriesNLog.csproj">
       <Project>{9DC31DE3-79FF-47A8-96B4-6BA18F6BB1CB}</Project>
       <Name>LogentriesNLog</Name>
