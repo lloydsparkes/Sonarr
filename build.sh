@@ -7,9 +7,11 @@ outputFolderOsxApp='./_output_osx_app'
 testPackageFolder='./_tests/'
 testSearchPattern='*.Test/bin/x86/Release'
 sourceFolder='./src'
+slnFile=$sourceFolder/NzbDrone.sln
 updateFolder=$outputFolder/NzbDrone.Update
 updateFolderMono=$outputFolderMono/NzbDrone.Update
 
+nuget='tools/nuget/nuget.exe';
 CheckExitCode()
 {
     "$@"
@@ -26,14 +28,6 @@ CleanFolder()
     local path=$1
     local keepConfigFiles=$2
 
-    echo "Removing XMLDoc files"
-    local xmlfiles=( $(find $path -name "*.xml") )
-    for filename in "${xmlfiles[@]}"
-    do
-        if [ -e ${filename%.xml}.dll ] || [ -e ${filename%.xml}.exe ]  ; then
-            rm $filename
-        fi
-    done
 
     find $path -name "*.transform" -exec rm "{}" \;
 
@@ -54,11 +48,6 @@ CleanFolder()
     echo "Removing dylib files"
     find $path -name "*.dylib" -exec rm "{}" \;
 
-    if [ -d $path/NuGet ] ; then
-        echo "Removing NuGet"
-        rm -rf $path/NuGet
-    fi
-
     echo "Removing Empty folders"
     find $path -depth -empty -type d -exec rm -r "{}" \;
 }
@@ -75,15 +64,17 @@ AddJsonNet()
 BuildWithMSBuild()
 {
     export PATH=$msBuild:$PATH
-    CheckExitCode MSBuild.exe $sourceFolder/NzbDrone.sln //t:Clean //m
-    CheckExitCode MSBuild.exe $sourceFolder/NzbDrone.sln //p:Configuration=Release //p:Platform=x86 //t:Build //m
+    CheckExitCode MSBuild.exe $slnFile //t:Clean //m
+    $nuget restore $slnFile
+    CheckExitCode MSBuild.exe $slnFile //p:Configuration=Release //p:Platform=x86 //t:Build //m //p:AllowedReferenceRelatedFileExtensions=.pdb
 }
 
 BuildWithXbuild()
 {
     export MONO_IOMAP=case
-    CheckExitCode xbuild /t:Clean $sourceFolder/NzbDrone.sln
-    CheckExitCode xbuild /p:Configuration=Release /p:Platform=x86 /t:Build $sourceFolder/NzbDrone.sln
+    CheckExitCode xbuild /t:Clean $slnFile
+    mono $nuget restore $slnFile
+    CheckExitCode xbuild /p:Configuration=Release /p:Platform=x86 /t:Build /m /p:AllowedReferenceRelatedFileExtensions=.pdb $slnFile
 }
 
 Build()
@@ -217,10 +208,9 @@ PackageTests()
     find $sourceFolder -path $testSearchPattern -exec cp -r -u -T "{}" $testPackageFolder \;
 
     if [ $runtime = "dotnet" ] ; then
-        $sourceFolder/.nuget/NuGet.exe install NUnit.Runners -Version 2.6.1 -Output $testPackageFolder
-        cp $outputFolder/*.pdb $testPackageFolder
+        $nuget install NUnit.Runners -Version 2.6.1 -Output $testPackageFolder
     else
-        mono $sourceFolder/.nuget/NuGet.exe install NUnit.Runners -Version 2.6.1 -Output $testPackageFolder
+        mono $nuget install NUnit.Runners -Version 2.6.1 -Output $testPackageFolder
     fi
 
     cp $outputFolder/*.dll $testPackageFolder
