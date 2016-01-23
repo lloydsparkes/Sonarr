@@ -16,6 +16,8 @@ namespace NzbDrone.Common.Http
             _segments = new Dictionary<string, string>();
             AllowAutoRedirect = true;
             Cookies = new Dictionary<string, string>();
+            IsIndexerRequest = false;
+            Proxy = null;
 
             if (!RuntimeInfoBase.IsProduction)
             {
@@ -54,6 +56,8 @@ namespace NzbDrone.Common.Http
         public Dictionary<string, string> Cookies { get; private set; }
         public bool StoreResponseCookie { get; set; }
         public TimeSpan RateLimit { get; set; }
+        public bool IsIndexerRequest { get; set; }
+        public HttpRequestProxySettings Proxy {get; set;}
 
         public override string ToString()
         {

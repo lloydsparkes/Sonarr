@@ -155,6 +155,7 @@
     <Compile Include="Http\HttpMethod.cs" />
     <Compile Include="Http\HttpProvider.cs" />
     <Compile Include="Http\HttpRequest.cs" />
+    <Compile Include="Http\HttpRequestProxySettings.cs" />
     <Compile Include="Http\HttpResponse.cs" />
     <Compile Include="Http\IHttpRequestInterceptor.cs" />
     <Compile Include="Http\JsonRpcRequestBuilder.cs" />

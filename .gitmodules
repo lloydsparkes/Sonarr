@@ -2,3 +2,6 @@
 	path = src/ExternalModules/CurlSharp
 	url = https://github.com/Sonarr/CurlSharp.git
 	branch = master
+[submodule "src/ExternalModules/SocksWebProxy"]
+	path = src/ExternalModules/SocksWebProxy
+	url = https://github.com/lloydsparkes/SocksWebProxy.git

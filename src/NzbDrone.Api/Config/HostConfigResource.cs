@@ -3,6 +3,7 @@ using NzbDrone.Api.REST;
 using NzbDrone.Core.Authentication;
 using NzbDrone.Core.Update;
 using NzbDrone.Core.Http;
+using NzbDrone.Common.Http;
 
 namespace NzbDrone.Api.Config
 {

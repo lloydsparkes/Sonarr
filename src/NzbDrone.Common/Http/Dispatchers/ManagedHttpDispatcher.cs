@@ -1,6 +1,8 @@
 using System;
 using System.Net;
 using NzbDrone.Common.Extensions;
+using com.LandonKey.SocksWebProxy.Proxy;
+using com.LandonKey.SocksWebProxy;
 
 namespace NzbDrone.Common.Http.Dispatchers
 {
@@ -22,6 +24,31 @@ namespace NzbDrone.Common.Http.Dispatchers
             webRequest.AllowAutoRedirect = request.AllowAutoRedirect;
             webRequest.ContentLength = 0;
             webRequest.CookieContainer = cookies;
+
+            if (request.Proxy != null)
+            {
+                IPAddress[] addresses = Dns.GetHostAddresses(request.Proxy.Host);
+                switch (request.Proxy.Type)
+                {
+                    case ProxyType.Http:
+                        if(request.Proxy.Username != null && request.Proxy.Password != null)
+                        {
+                            webRequest.Proxy = new WebProxy(request.Proxy.Host + ":" + request.Proxy.Port, true, new string[] { }, new NetworkCredential(request.Proxy.Username, request.Proxy.Password));
+                        }
+                        else
+                        {
+                            webRequest.Proxy = new WebProxy(request.Proxy.Host + ":" + request.Proxy.Port, true);
+                        }
+                        break;
+                    case ProxyType.Socks4:
+                        webRequest.Proxy = new SocksWebProxy(new ProxyConfig(IPAddress.Parse("127.0.0.1"), 12345, addresses[1], request.Proxy.Port, ProxyConfig.SocksVersion.Four));
+                        break;
+                    case ProxyType.Socks5:
+                        webRequest.Proxy = new SocksWebProxy(new ProxyConfig(IPAddress.Parse("127.0.0.1"), 12345, addresses[1], request.Proxy.Port, ProxyConfig.SocksVersion.Five));
+                        break;
+                }
+                
+            }
 
             if (request.Headers != null)
             {
