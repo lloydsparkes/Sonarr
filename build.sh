@@ -5,7 +5,7 @@ outputFolderMono='./_output_mono'
 outputFolderOsx='./_output_osx'
 outputFolderOsxApp='./_output_osx_app'
 testPackageFolder='./_tests/'
-testSearchPattern='*.Test/bin/x86/Release/*'
+testSearchPattern='*.Test/bin/x86/Release'
 sourceFolder='./src'
 updateFolder=$outputFolder/NzbDrone.Update
 updateFolderMono=$outputFolderMono/NzbDrone.Update
@@ -51,6 +51,9 @@ CleanFolder()
     echo "Removing vshost files"
     find $path -name "*.vshost.exe" -exec rm "{}" \;
 
+    echo "Removing dylib files"
+    find $path -name "*.dylib" -exec rm "{}" \;
+
     if [ -d $path/NuGet ] ; then
         echo "Removing NuGet"
         rm -rf $path/NuGet
@@ -94,9 +97,9 @@ Build()
     else
         BuildWithXbuild
     fi
-    
+
     CleanFolder $outputFolder false
-    
+
     AddJsonNet
 
     echo "Removing Mono.Posix.dll"
@@ -107,11 +110,12 @@ Build()
 
 RunGulp()
 {
-    echo "##teamcity[progressStart 'Running Gulp']"
-
+    echo "##teamcity[progressStart 'npm install']"
     CheckExitCode npm install
-    CheckExitCode gulp build
+    echo "##teamcity[progressFinish 'npm install']"
 
+    echo "##teamcity[progressStart 'Running Gulp']"
+    CheckExitCode gulp build
     echo "##teamcity[progressFinish 'Running Gulp']"
 }
 
@@ -119,7 +123,16 @@ CreateMdbs()
 {
     local path=$1
     if [ $runtime = "dotnet" ] ; then
-        find $path \( -name "*.exe" -o -name "*.dll" \) -not -name "MediaInfo.dll" -not -name "sqlite3.dll" -exec tools/pdb2mdb/pdb2mdb.exe "{}" \;
+        local pdbFiles=( $(find $path -name "*.pdb") )
+        for filename in "${pdbFiles[@]}"
+        do
+          if [ -e ${filename%.pdb}.dll ]  ; then
+            tools/pdb2mdb/pdb2mdb.exe ${filename%.pdb}.dll
+          fi
+          if [ -e ${filename%.pdb}.exe ]  ; then
+            tools/pdb2mdb/pdb2mdb.exe ${filename%.pdb}.exe
+          fi
+        done
     fi
 }
 
@@ -160,6 +173,8 @@ PackageMono()
 
     echo "Adding NzbDrone.Mono to UpdatePackage"
     cp $outputFolderMono/NzbDrone.Mono.* $updateFolderMono
+
+    echo "##teamcity[progressFinish 'Creating Mono Package']"
 }
 
 PackageOsx()
@@ -199,7 +214,7 @@ PackageTests()
     rm -rf $testPackageFolder
     mkdir $testPackageFolder
 
-    find . -maxdepth 6 -path $testSearchPattern -exec cp -r "{}" $testPackageFolder \;
+    find $sourceFolder -path $testSearchPattern -exec cp -r -u -T "{}" $testPackageFolder \;
 
     if [ $runtime = "dotnet" ] ; then
         $sourceFolder/.nuget/NuGet.exe install NUnit.Runners -Version 2.6.1 -Output $testPackageFolder
