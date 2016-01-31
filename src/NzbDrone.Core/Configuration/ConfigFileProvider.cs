@@ -15,7 +15,8 @@ using NzbDrone.Core.Lifecycle;
 using NzbDrone.Core.Messaging.Commands;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.Update;
-
+using NzbDrone.Core.Http;
+using NzbDrone.Common.Http;
 
 namespace NzbDrone.Core.Configuration
 {
@@ -41,6 +42,12 @@ namespace NzbDrone.Core.Configuration
         bool UpdateAutomatically { get; }
         UpdateMechanism UpdateMechanism { get; }
         string UpdateScriptPath { get; }
+        UseProxy ProxyEnabled { get; }
+        ProxyType ProxyType { get; }
+        string ProxyHostname { get; }
+        int ProxyPort { get; }
+        string ProxyUsername { get; }
+        string ProxyPassword { get; }
     }
 
     public class ConfigFileProvider : IConfigFileProvider
@@ -214,6 +221,36 @@ namespace NzbDrone.Core.Configuration
 
                 return "/" + urlBase.Trim('/').ToLower();
             }
+        }
+
+        public UseProxy ProxyEnabled
+        {
+            get { return GetValueEnum<UseProxy>("ProxyEnabled", UseProxy.Off); }
+        }
+
+        public ProxyType ProxyType
+        {
+            get { return GetValueEnum<ProxyType>("ProxyType", ProxyType.Http); }
+        }
+
+        public string ProxyHostname
+        {
+            get { return GetValue("ProxyHostname", "localhost"); }
+        }
+
+        public int ProxyPort
+        {
+            get { return GetValueInt("ProxyPort", 8080); }
+        }
+
+        public string ProxyUsername
+        {
+            get { return GetValue("ProxyUsername", string.Empty); }
+        }
+
+        public string ProxyPassword
+        {
+            get { return GetValue("ProxyPassword", string.Empty); }
         }
 
         public string UiFolder

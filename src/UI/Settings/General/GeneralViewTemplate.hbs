@@ -169,28 +169,32 @@
 		<div class="form-group">
             <label class="col-sm-3 control-label">Use Proxy</label>
 
-		    <div class="col-sm-4">
-                <select name="proxyEnabled" class="form-control x-auth">
-                    <option value="off" default>Do not use Proxy</option>
+			<div class="col-sm-1 col-sm-push-4 help-inline">
+                <i class="icon-sonarr-form-warning" title="Requires restart to take effect"/>
+            </div>
+			
+		    <div class="col-sm-4 col-sm-pull-1">
+                <select name="proxyEnabled" class="form-control x-auth x-proxy-settings">
+                    <option value="off">Do not use Proxy</option>
                     <option value="indexersOnly">Indexers Only</option>
                     <option value="global">Use Proxy for everything</option>
                 </select>
             </div>
         </div>
 		
-        <div class="form-group">
+        <div class="form-group proxy-setting">
             <label class="col-sm-3 control-label">Proxy Type</label>
 
             <div class="col-sm-4">
                 <select name="proxyType" class="form-control x-auth">
-                    <option value="http">HTTP(S)</option>
+                    <option value="http" selected="selected">HTTP(S)</option>
                     <option value="socks4">Socks4</option>
                     <option value="socks5">Socks5 (This option supports Tor)</option>
                 </select>
             </div>
         </div>
 
-		<div class="form-group">
+		<div class="form-group proxy-setting">
 			<label class="col-sm-3 control-label">Hostname</label>
 
 			<div class="col-sm-4">
@@ -198,7 +202,7 @@
 			</div>
 		</div>
 
-		<div class="form-group">
+		<div class="form-group proxy-setting">
 			<label class="col-sm-3 control-label">Port</label>
 
 			<div class="col-sm-4">
@@ -206,7 +210,7 @@
 			</div>
 		</div>
 		
-		<div class="form-group">
+		<div class="form-group proxy-setting">
 			<label class="col-sm-3 control-label">Username</label>
 
 			<div class="col-sm-4">
@@ -214,7 +218,7 @@
 			</div>
 		</div>
 		
-		<div class="form-group">
+		<div class="form-group proxy-setting">
 			<label class="col-sm-3 control-label">Password</label>
 
 			<div class="col-sm-4">

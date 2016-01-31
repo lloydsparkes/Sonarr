@@ -9,9 +9,9 @@ namespace NzbDrone.Core.Http
 {
     public class ProxyHttpInterceptor : IHttpRequestInterceptor
     {
-        private readonly IConfigService _configService;
+        private readonly IConfigFileProvider _configService;
 
-        public ProxyHttpInterceptor(IConfigService configService)
+        public ProxyHttpInterceptor(IConfigFileProvider configService)
         {
             this._configService = configService;
         }

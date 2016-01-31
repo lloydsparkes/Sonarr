@@ -307,49 +307,11 @@ namespace NzbDrone.Core.Configuration
         public string RijndaelSalt
         {
             get { return GetValue("RijndaelSalt", Guid.NewGuid().ToString(), true); }
-            set { SetValue("TimeFormat", value); }
         }
 
         public string HmacSalt
         {
             get { return GetValue("HmacSalt", Guid.NewGuid().ToString(), true); }
-            set { SetValue("TimeFormat", value); }
-        }
-
-        public UseProxy ProxyEnabled
-        {
-            get { return GetValueEnum<UseProxy>("ProxyEnabled", UseProxy.Off); }
-            set { SetValue("ProxyEnabled", value); }
-        }
-
-        public ProxyType ProxyType
-        {
-            get { return GetValueEnum<ProxyType>("ProxyType", ProxyType.Http); }
-            set { SetValue("ProxyType", value); }
-        }
-
-        public string ProxyHostname
-        {
-            get { return GetValue("ProxyHostname", "localhost"); }
-            set { SetValue("ProxyHostname", value); }
-        }
-
-        public int ProxyPort
-        {
-            get { return GetValueInt("ProxyPort", 8080); }
-            set { SetValue("ProxyPort", value); }
-        }
-
-        public string ProxyUsername
-        {
-            get { return GetValue("ProxyUsername", string.Empty); }
-            set { SetValue("ProxyUsername", value); }
-        }
-
-        public string ProxyPassword
-        {
-            get { return GetValue("ProxyPassword", string.Empty); }
-            set { SetValue("ProxyPassword", value); }
         }
 
         private string GetValue(string key)

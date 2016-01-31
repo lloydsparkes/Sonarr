@@ -66,13 +66,5 @@ namespace NzbDrone.Core.Configuration
         string HmacPassphrase { get; }
         string RijndaelSalt { get; }
         string HmacSalt { get; }
-
-        //Proxy Bits
-        UseProxy ProxyEnabled { get; }
-        ProxyType ProxyType { get; }
-        string ProxyHostname { get; }
-        int ProxyPort { get; }
-        string ProxyUsername { get; }
-        string ProxyPassword { get; }
     }
 }

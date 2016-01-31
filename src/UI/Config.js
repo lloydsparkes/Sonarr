@@ -12,7 +12,8 @@ module.exports = {
         UseSeasonFolder     : 'UseSeasonFolder',
         DefaultSeriesType   : 'DefaultSeriesType',
         MonitorEpisodes     : 'MonitorEpisodes',
-        AdvancedSettings    : 'advancedSettings'
+        AdvancedSettings    : 'advancedSettings',
+		ProxySettings		: 'proxySettings'
     },
 
     getValueJson : function (key, defaultValue) {

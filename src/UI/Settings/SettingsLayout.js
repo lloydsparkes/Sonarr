@@ -49,7 +49,8 @@ module.exports = Marionette.Layout.extend({
         metadataTab        : '.x-metadata-tab',
         generalTab         : '.x-general-tab',
         uiTab              : '.x-ui-tab',
-        advancedSettings   : '.x-advanced-settings'
+        advancedSettings   : '.x-advanced-settings',
+		proxySettings	   : '.x-proxy-settings'
     },
 
     events : {
@@ -63,7 +64,8 @@ module.exports = Marionette.Layout.extend({
         'click .x-general-tab'          : '_showGeneral',
         'click .x-ui-tab'               : '_showUi',
         'click .x-save-settings'        : '_save',
-        'change .x-advanced-settings'   : '_toggleAdvancedSettings'
+        'change .x-advanced-settings'   : '_toggleAdvancedSettings',
+		'change .x-proxy-settings'   	: '_toggleProxySettings'
     },
 
     initialize : function(options) {
@@ -105,6 +107,7 @@ module.exports = Marionette.Layout.extend({
             });
 
         this._setAdvancedSettingsState();
+		this._setProxySettingsState();
     },
 
     onShow : function() {
@@ -240,6 +243,7 @@ module.exports = Marionette.Layout.extend({
     },
 
     _toggleAdvancedSettings : function() {
+		console.log("Advance Toggled")
         var checked = this.ui.advancedSettings.prop('checked');
         Config.setValue(Config.Keys.AdvancedSettings, checked);
 
@@ -247,6 +251,25 @@ module.exports = Marionette.Layout.extend({
             $('body').addClass('show-advanced-settings');
         } else {
             $('body').removeClass('show-advanced-settings');
+        }
+    },
+	
+	_setProxySettingsState : function() {
+        var value = Config.getValue(Config.Keys.ProxySettings);
+
+        if (value !== 'off') {
+            $('body').addClass('show-proxy-settings');
+        }
+    },
+	
+	_toggleProxySettings : function() {
+		console.log("Proxy Toggled")
+        var value = $('.x-proxy-settings').val();
+		Config.setValue(Config.Keys.ProxySettings, value);
+        if (value === 'off') {
+            $('body').removeClass('show-proxy-settings');
+        } else {
+            $('body').addClass('show-proxy-settings');
         }
     }
 });
